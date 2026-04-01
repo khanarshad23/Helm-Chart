@@ -8,6 +8,7 @@ This Helm chart provides a standardized way to deploy containerized applications
 
 - **Multiple workload types**: Deployment, StatefulSet, Job, and CronJob
 - **Auto-scaling**: Horizontal Pod Autoscaler (HPA) and KEDA ScaledObject
+- **Modern stable Kubernetes features**: K8s 1.33 sidecar containers and K8s 1.35 in-place resize policy
 - **Networking**: Service, Ingress, and NetworkPolicy
 - **Configuration management**: ConfigMap and Secret support
 - **High availability**: PodDisruptionBudget and health probes
@@ -15,7 +16,7 @@ This Helm chart provides a standardized way to deploy containerized applications
 
 ## Prerequisites
 
-- Kubernetes 1.27+
+- Kubernetes 1.33+
 - Helm 4.x (this chart is Helm v4-only)
 - kubectl configured to access your Kubernetes cluster
 
@@ -64,16 +65,34 @@ The following table lists the configurable parameters and their default values:
 
 ### Workload-Specific Configuration
 
-#### Deployment/StatefulSet
+#### Deployment
 
 - `updateStrategy`: Update strategy configuration
-- `podManagementPolicy`: Pod management policy for StatefulSet (OrderedReady/Parallel)
+- `minReadySeconds`: Minimum ready time before a pod is considered available
+- `revisionHistoryLimit`: Number of old ReplicaSets to retain
+- `progressDeadlineSeconds`: Deployment progress deadline
+- `paused`: Pause rollout processing
+
+#### StatefulSet
+
+- `updateStrategy`: Update strategy configuration
+- `podManagementPolicy`: Pod management policy (OrderedReady/Parallel)
+- `revisionHistoryLimit`: Number of old ControllerRevisions to retain
+- `ordinalsStart`: Start ordinal for pod numbering
+- `persistence.claimRetentionPolicy`: PVC retention policy when deleted or scaled down
 
 #### CronJob/Job
 
 - `schedule`: Cron schedule expression (CronJob only)
 - `restartPolicy`: Pod restart policy
 - `backoffLimit`: Number of retries before marking Job as failed
+- `parallelism`: Number of pods to run in parallel
+- `completions`: Total successful pod completions required
+- `completionMode`: Completion mode (`NonIndexed`/`Indexed`)
+- `activeDeadlineSeconds`: Deadline for job execution
+- `ttlSecondsAfterFinished`: TTL for finished Jobs
+- `podFailurePolicy`: Rules for handling pod failures
+- `startingDeadlineSeconds`: Deadline for starting missed runs (CronJob only)
 - `successfulJobsHistoryLimit`: Number of successful job history to retain
 - `failedJobsHistoryLimit`: Number of failed job history to retain
 - `concurrencyPolicy`: Concurrency policy (Allow/Forbid/Replace)
@@ -82,27 +101,56 @@ The following table lists the configurable parameters and their default values:
 
 ### Pod Configuration
 
-| Parameter                       | Description                                | Default |
-| ------------------------------- | ------------------------------------------ | ------- |
-| `podAnnotations`                | Annotations to add to pods                 | `{}`    |
-| `podLabels`                     | Labels to add to pods                      | `{}`    |
-| `podSecurityContext`            | Security context for pods                  | `{}`    |
-| `terminationGracePeriodSeconds` | Grace period for pod termination           | `30`    |
-| `shareProcessNamespace`         | Share process namespace between containers | `false` |
+| Parameter                       | Description                                      | Default          |
+| ------------------------------- | ------------------------------------------------ | ---------------- |
+| `podAnnotations`                | Annotations to add to pods                       | `{}`             |
+| `podLabels`                     | Labels to add to pods                            | `{}`             |
+| `podSecurityContext`            | Security context for pods                        | `{}`             |
+| `terminationGracePeriodSeconds` | Grace period for pod termination                 | `null`           |
+| `shareProcessNamespace`         | Share process namespace between containers       | `false`          |
+| `runtimeClassName`              | RuntimeClass for the pod                         | `""`             |
+| `priorityClassName`             | PriorityClass for scheduling                     | `""`             |
+| `schedulerName`                 | Scheduler name                                   | `""`             |
+| `dnsPolicy`                     | DNS policy                                       | `ClusterFirst`   |
+| `dnsConfig`                     | DNS config override                              | `{}`             |
+| `readinessGates`                | Additional readiness gates                       | `[]`             |
+| `enableServiceLinks`            | Inject service environment variables             | `true`           |
+| `topologySpreadConstraints`     | Pod topology spread constraints                  | `[]`             |
 
 ### Container Configuration
 
-| Parameter                      | Description                        | Default |
-| ------------------------------ | ---------------------------------- | ------- |
-| `containers[].securityContext` | Security context for container     | `{}`    |
-| `containers[].resources`       | Resource requests and limits       | `{}`    |
-| `containers[].env`             | Environment variables              | `[]`    |
-| `containers[].envFrom`         | Environment variables from sources | `[]`    |
-| `containers[].volumeMounts`    | Volume mounts                      | `[]`    |
-| `containers[].livenessProbe`   | Liveness probe configuration       | `{}`    |
-| `containers[].readinessProbe`  | Readiness probe configuration      | `{}`    |
-| `containers[].startupProbe`    | Startup probe configuration        | `{}`    |
-| `containers[].lifecycle`       | Lifecycle hooks                    | `{}`    |
+| Parameter                               | Description                                                | Default                  |
+| --------------------------------------- | ---------------------------------------------------------- | ------------------------ |
+| `containers[].workingDir`               | Container working directory                                | `""`                     |
+| `containers[].securityContext`          | Security context for container                             | `{}`                     |
+| `containers[].resources`                | Resource requests and limits                               | `{}`                     |
+| `containers[].resizePolicy`             | In-place resize policy for CPU/memory (K8s 1.35 GA)        | `[]`                     |
+| `containers[].env`                      | Environment variables                                      | `[]`                     |
+| `containers[].envFrom`                  | Environment variables from sources                         | `[]`                     |
+| `containers[].volumeMounts`             | Volume mounts                                              | `[]`                     |
+| `containers[].livenessProbe`            | Liveness probe configuration                               | `{}`                     |
+| `containers[].readinessProbe`           | Readiness probe configuration                              | `{}`                     |
+| `containers[].startupProbe`             | Startup probe configuration                                | `{}`                     |
+| `containers[].lifecycle`                | Lifecycle hooks                                            | `{}`                     |
+| `containers[].terminationMessagePolicy` | Termination message policy                                 | `File`                   |
+| `containers[].terminationMessagePath`   | Termination message path                                   | `/dev/termination-log`   |
+| `containers[].stdin`                    | Enable stdin                                               | `false`                  |
+| `containers[].tty`                      | Allocate a TTY                                             | `false`                  |
+
+### Init Container Configuration
+
+| Parameter                                  | Description                                                       | Default |
+| ------------------------------------------ | ----------------------------------------------------------------- | ------- |
+| `initcontainers`                           | List of init containers                                           | `[]`    |
+| `initcontainers[].restartPolicy`           | Use `Always` to enable stable sidecar containers (K8s 1.33 GA)    | `""`    |
+| `initcontainers[].workingDir`              | Init container working directory                                  | `""`    |
+| `initcontainers[].livenessProbe`           | Liveness probe configuration                                      | `{}`    |
+| `initcontainers[].readinessProbe`          | Readiness probe configuration                                     | `{}`    |
+| `initcontainers[].startupProbe`            | Startup probe configuration                                       | `{}`    |
+| `initcontainers[].terminationMessagePolicy`| Termination message policy                                        | `File`  |
+| `initcontainers[].terminationMessagePath`  | Termination message path                                          | `/dev/termination-log` |
+| `initcontainers[].stdin`                   | Enable stdin                                                      | `false` |
+| `initcontainers[].tty`                     | Allocate a TTY                                                    | `false` |
 
 ### Service Configuration
 
@@ -125,24 +173,26 @@ The following table lists the configurable parameters and their default values:
 
 ### Configuration Management
 
-| Parameter               | Description                               | Default |
-| ----------------------- | ----------------------------------------- | ------- |
-| `configMap.enabled`     | Enable ConfigMap                          | `false` |
-| `configMap.fileConfigs` | ConfigMap file configurations             | `[]`    |
-| `configEnv.enabled`     | Enable ConfigMap as environment variables | `false` |
-| `secretEnv.enabled`     | Enable Secret as environment variables    | `false` |
-| `secretEnv.data`        | Secret data                               | `""`    |
+| Parameter               | Description                                                  | Default |
+| ----------------------- | ------------------------------------------------------------ | ------- |
+| `configMap.enabled`     | Enable ConfigMap                                             | `false` |
+| `configMap.fileConfigs` | ConfigMap file configurations                                | `[]`    |
+| `configEnv.enabled`     | Enable ConfigMap as environment variables                    | `false` |
+| `secretEnv.enabled`     | Enable Secret as environment variables                       | `false` |
+| `secretEnv.data`        | Secret key/value data rendered via `stringData`              | `""`    |
 
 ### Storage Configuration
 
-| Parameter                  | Description              | Default         |
-| -------------------------- | ------------------------ | --------------- |
-| `persistence.enabled`      | Enable persistent volume | `false`         |
-| `persistence.storageClass` | Storage class name       | `""`            |
-| `persistence.accessMode`   | Access mode              | `ReadWriteOnce` |
-| `persistence.size`         | Storage size             | `10Gi`          |
-| `persistence.mountPath`    | Mount path               | `/data`         |
-| `volumes`                  | Additional volumes       | `[]`            |
+| Parameter                               | Description                                       | Default         |
+| --------------------------------------- | ------------------------------------------------- | --------------- |
+| `persistence.enabled`                   | Enable persistent volume                          | `false`         |
+| `persistence.storageClass`              | Storage class name                                | `""`            |
+| `persistence.accessMode`                | Access mode                                       | `ReadWriteOnce` |
+| `persistence.size`                      | Storage size                                      | `10Gi`          |
+| `persistence.mountPath`                 | Mount path                                        | `/data`         |
+| `persistence.claimRetentionPolicy.whenDeleted` | PVC retention when StatefulSet is deleted | `Retain`        |
+| `persistence.claimRetentionPolicy.whenScaled`  | PVC retention when StatefulSet is scaled down | `Retain`        |
+| `volumes`                               | Additional volumes                                | `[]`            |
 
 ### Auto-scaling Configuration
 
@@ -188,6 +238,7 @@ The following table lists the configurable parameters and their default values:
 | `podDisruptionBudget.enabled`        | Enable PodDisruptionBudget | `false` |
 | `podDisruptionBudget.minAvailable`   | Minimum available pods     | `""`    |
 | `podDisruptionBudget.maxUnavailable` | Maximum unavailable pods   | `""`    |
+| `podDisruptionBudget.unhealthyPodEvictionPolicy` | PDB unhealthy pod eviction policy | `""` |
 
 ### Scheduling Configuration
 
@@ -197,6 +248,15 @@ The following table lists the configurable parameters and their default values:
 | `tolerations`  | Tolerations    | `[]`    |
 | `affinity`     | Affinity rules | `{}`    |
 | `hostAliases`  | Host aliases   | `[]`    |
+
+## Stable Kubernetes Features
+
+This chart currently exposes only **stable GA Kubernetes APIs/features** and includes:
+
+- **Kubernetes 1.33 GA sidecar containers** via `initcontainers[].restartPolicy: Always`
+- **Kubernetes 1.35 GA in-place resize policy** via `containers[].resizePolicy`
+- **PDB unhealthy pod eviction policy** via `podDisruptionBudget.unhealthyPodEvictionPolicy`
+- **StatefulSet PVC retention policy** via `persistence.claimRetentionPolicy`
 
 ## Examples
 
@@ -241,11 +301,53 @@ containers:
 kind: CronJob
 schedule: "0 2 * * *"
 timeZone: "America/New_York"
+startingDeadlineSeconds: 600
+ttlSecondsAfterFinished: 3600
 containers:
   - name: backup
     image:
       repository: backup-tool
       tag: "latest"
+```
+
+### Deployment with Stable Sidecar
+
+```yaml
+kind: Deployment
+containers:
+  - name: app
+    image:
+      repository: myapp
+      tag: "v1.0.0"
+initcontainers:
+  - name: log-shipper
+    restartPolicy: Always
+    image:
+      repository: fluent/fluent-bit
+      tag: "3.0"
+```
+
+### Deployment with In-Place Resize Policy
+
+```yaml
+kind: Deployment
+containers:
+  - name: app
+    image:
+      repository: myapp
+      tag: "v1.0.0"
+    resources:
+      requests:
+        cpu: 250m
+        memory: 256Mi
+      limits:
+        cpu: 1
+        memory: 1Gi
+    resizePolicy:
+      - resourceName: cpu
+        restartPolicy: NotRequired
+      - resourceName: memory
+        restartPolicy: RestartContainer
 ```
 
 ### Deployment with HPA

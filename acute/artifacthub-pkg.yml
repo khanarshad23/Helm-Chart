@@ -1,11 +1,11 @@
 # Artifact Hub package metadata file
 # Reference: https://raw.githubusercontent.com/artifacthub/hub/refs/heads/master/docs/metadata/artifacthub-pkg.yml
 
-version: 1.1.0
+version: 1.2.0
 name: acute
 displayName: Acute Helm Chart
 createdAt: '2026-01-23T00:00:00Z'
-description: A flexible and comprehensive Helm chart for deploying applications on Kubernetes. Supports multiple workload types including Deployments, StatefulSets, Jobs, and CronJobs with extensive configuration options for production-ready deployments.
+description: A flexible and comprehensive Helm chart for deploying applications on Kubernetes 1.33+. Supports Deployments, StatefulSets, Jobs, and CronJobs with stable modern workload features for production-ready deployments.
 category: integration-delivery
 appVersion: '1.0.0'
 license: Apache-2.0
@@ -18,6 +18,8 @@ containersImages:
       - linux/arm64
 keywords:
   - kubernetes
+  - kubernetes-1.33
+  - kubernetes-1.35
   - helm
   - deployment
   - statefulset
@@ -59,10 +61,13 @@ readme: |
 
   - **Multiple workload types**: Deployment, StatefulSet, Job, and CronJob
   - **Auto-scaling**: Horizontal Pod Autoscaler (HPA) and KEDA ScaledObject
+  - **Modern stable Kubernetes features**: K8s 1.33 sidecar containers and K8s 1.35 in-place resize policy
   - **Networking**: Service, Ingress, and NetworkPolicy
   - **Configuration management**: ConfigMap and Secret support
   - **High availability**: PodDisruptionBudget and health probes
   - **Security**: ServiceAccount, security contexts, and network policies
+
+  Kubernetes compatibility: **1.33+**
 
   ## Quick Start
 
@@ -120,6 +125,14 @@ install: |
   For more configuration options, see the [values.yaml](https://github.com/novacaap/helm-charts/blob/main/acute/values.yaml) file.
 
 changes:
+  - kind: added
+    description: Added support for stable K8s 1.33 sidecar containers via initContainers restartPolicy Always
+  - kind: added
+    description: Added support for stable K8s 1.35 resizePolicy and additional stable workload controls for Deployment, StatefulSet, Job, and CronJob
+  - kind: added
+    description: Added stable scheduling, DNS, runtime, PVC retention, readiness gate, and container ergonomics options
+  - kind: changed
+    description: Updated chart metadata and documentation for Kubernetes 1.33+ compatibility
   - kind: changed
     description: Helm v4 standards refresh with stricter values schema validation and template guardrails
   - kind: security
