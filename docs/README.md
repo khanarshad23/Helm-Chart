@@ -58,14 +58,14 @@ helm version
 ### Add This Repository
 
 ```bash
-helm repo add novacaap https://novacaap.github.io/helm-chart
+helm repo add khanarshad23 https://khanarshad23.github.io/Helm-Chart/
 helm repo update
 ```
 
 ### List Available Charts
 
 ```bash
-helm search repo novacaap
+helm search repo khanarshad23
 ```
 
 ## Available Charts
@@ -89,7 +89,7 @@ helm repo add <repo-name> <repo-url>
 Example:
 
 ```bash
-helm repo add novacaap https://novacaap.github.io/helm-chart
+helm repo add khanarshad23 https://khanarshad23.github.io/Helm-Chart/
 ```
 
 #### List Repositories
@@ -131,7 +131,7 @@ helm install <release-name> <repo-name>/<chart-name>
 Example:
 
 ```bash
-helm install my-app novacaap/acute
+helm install my-app khanarshad23/acute
 ```
 
 #### Install with Custom Values
@@ -310,86 +310,86 @@ helm repo index <directory>
 
 1. **Add the repository**
 
-   ```bash
-   helm repo add novacaap https://novacaap.github.io/helm-chart
+```bash
+   helm repo add khanarshad23 https://khanarshad23.github.io/Helm-Chart/
    helm repo update
-   ```
+```
 
 2. **Search for charts**
 
-   ```bash
-   helm search repo novacaap
-   ```
+```bash
+   helm search repo khanarshad23
+```
 
 3. **View chart values**
 
-   ```bash
-   helm show values novacaap/acute
-   ```
+```bash
+   helm show values khanarshad23/acute
+```
 
 4. **Create custom values file**
 
-   ```bash
-   helm show values novacaap/acute > my-values.yaml
+```bash
+   helm show values khanarshad23/acute > my-values.yaml
    # Edit my-values.yaml with your configuration
-   ```
+```
 
 5. **Install the chart**
 
-   ```bash
-   helm install my-release novacaap/acute -f my-values.yaml
-   ```
+```bash
+   helm install my-release khanarshad23/acute -f my-values.yaml
+```
 
 6. **Check status**
 
-   ```bash
+```bash
    helm status my-release
    kubectl get pods
-   ```
+```
 
 7. **Upgrade when needed**
 
-   ```bash
-   helm upgrade my-release novacaap/acute -f my-values.yaml
-   ```
+```bash
+   helm upgrade my-release khanarshad23/acute -f my-values.yaml
+```
 
 8. **Rollback if needed**
-   ```bash
+```bash
    helm rollback my-release
-   ```
+```
 
 ### Development Workflow
 
 1. **Clone and modify chart locally**
 
-   ```bash
-   git clone https://github.com/novacaap/helm-charts.git
-   cd helm-chart/acute
+```bash
+   git clone https://github.com/khanarshad23/Helm-Chart.git
+   cd Helm-Chart/acute
    # Make your changes
-   ```
+```
 
 2. **Lint the chart**
 
-   ```bash
+```bash
    helm lint .
-   ```
+```
 
 3. **Test with dry-run**
 
-   ```bash
+```bash
    helm install test-release . --dry-run --debug
-   ```
+```
 
 4. **Package the chart**
 
-   ```bash
+```bash
    helm package .
-   ```
+```
 
 5. **Test installation**
-   ```bash
+```bash
    helm install test-release ./acute-1.0.0.tgz
-   ```
+```
 
 ## Values Files
 
@@ -485,9 +485,9 @@ kubectl describe pod -l app.kubernetes.io/instance=<release-name>
 
 ## Repository Information
 
-- **Repository URL**: [https://github.com/novacaap/helm-charts](https://github.com/novacaap/helm-charts)
-- **Helm Repository**: `https://novacaap.github.io/helm-chart`
-- **Issues**: [https://github.com/novacaap/helm-charts/issues](https://github.com/novacaap/helm-charts/issues)
+- **Repository URL**: [https://github.com/khanarshad23/Helm-Chart](https://github.com/khanarshad23/Helm-Chart)
+- **Helm Repository**: `https://khanarshad23.github.io/Helm-Chart/`
+- **Issues**: [https://github.com/khanarshad23/Helm-Chart/issues](https://github.com/khanarshad23/Helm-Chart/issues)
 
 ## Contributing
 
