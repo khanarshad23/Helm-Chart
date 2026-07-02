@@ -1,7 +1,6 @@
 {{- $fullName := include "chart.fullname" . -}}
 {{- $labels := include "chart.labels" . -}}
 {{- $selectorLabels := include "chart.selectorLabels" . -}}
-
 # Kubernetes Service
 {{- range $containers := .Values.containers }}
 {{- if and $containers.service ( $containers.service.enabled | default false ) }}
@@ -24,12 +23,14 @@ spec:
       targetPort: {{ $ports.targetPort }}
       protocol: {{ $ports.protocol }}
       name: {{ $ports.name }}
+      {{- if and (eq $containers.service.type "NodePort") $ports.nodePort }}
+      nodePort: {{ $ports.nodePort }}
+      {{- end }}
     {{- end }}
   selector:
     {{- $selectorLabels | nindent 4 }}
 {{- end }}
 {{- end }}
-
 # Headless Kubernetes Service
 {{- if eq .Values.kind "StatefulSet" }}
 {{- range $containers := .Values.containers }}
