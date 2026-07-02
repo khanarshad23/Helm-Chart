@@ -1,9 +1,9 @@
 apiVersion: v2
 name: acute
 description: Flexible chart for deploying apps as Deployment, StatefulSet, Job, or CronJob
-home: https://github.com/novacaap/helm-charts
+home: https://github.com/khanarshad23/Helm-Chart
 sources:
-  - https://github.com/novacaap/helm-charts
+  - https://github.com/khanarshad23/Helm-Chart
 keywords:
   - kubernetes
   - kubernetes-1.33
@@ -14,8 +14,8 @@ keywords:
   - job
   - cronjob
 maintainers:
-  - name: Kalpesh Patel
-    email: kalpesh.br.patel@gmail.com
+  - name: Arshad Khan
+    email: arshad.khan@bankaiinformatics.co.in
 kubeVersion: ">=1.33.0-0"
 
 # A chart can be either an 'application' or a 'library' chart.
