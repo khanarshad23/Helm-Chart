@@ -1,22 +1,18 @@
 apiVersion: v2
 name: acute
-description: Flexible chart for deploying apps as Deployment, StatefulSet, Job, or CronJob
+description: Flexible chart for deploying Enfinity-Core as a deployment.
 home: https://github.com/khanarshad23/Helm-Chart
 sources:
   - https://github.com/khanarshad23/Helm-Chart
 keywords:
   - kubernetes
-  - kubernetes-1.33
-  - kubernetes-1.35
+  - Enfinity-Core
   - helm
   - deployment
-  - statefulset
-  - job
-  - cronjob
 maintainers:
   - name: Arshad Khan
     email: arshad.khan@bankaiinformatics.co.in
-kubeVersion: ">=1.33.0-0"
+kubeVersion: ">=1.33.0-0"        # This chart only works on Kubernetes version 1.33 or newer
 
 # A chart can be either an 'application' or a 'library' chart.
 #
