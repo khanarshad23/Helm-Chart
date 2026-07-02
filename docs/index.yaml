@@ -3,11 +3,11 @@ entries:
   acute:
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2026-04-14T11:12:26.35271+05:30"
+    created: "2026-07-02T07:19:19.313114353Z"
     description: Flexible chart for deploying apps as Deployment, StatefulSet, Job,
       or CronJob
-    digest: e4c712e0a04d704890a6b4cce2193114ffceec3b0c38fecde685ffd8ee260ff6
-    home: https://github.com/khanarshad23/Helm-Chart
+    digest: 2139d6d8624bf958907870fdbee5f3c17b45a385f3e30aa74c2c21a713275aaf
+    home: https://github.com/novacaap/helm-charts
     keywords:
     - kubernetes
     - kubernetes-1.33
@@ -23,18 +23,45 @@ entries:
       name: Kalpesh Patel
     name: acute
     sources:
-    - https://github.com/khanarshad23/Helm-Chart
+    - https://github.com/novacaap/helm-charts
+    type: application
+    urls:
+    - https://khanarshad23.github.io/Helm-Chart/acute-1.2.1.tgz
+    version: 1.2.1
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2026-07-02T07:19:19.311802976Z"
+    description: Flexible chart for deploying apps as Deployment, StatefulSet, Job,
+      or CronJob
+    digest: e4c712e0a04d704890a6b4cce2193114ffceec3b0c38fecde685ffd8ee260ff6
+    home: https://github.com/novacaap/helm-charts
+    keywords:
+    - kubernetes
+    - kubernetes-1.33
+    - kubernetes-1.35
+    - helm
+    - deployment
+    - statefulset
+    - job
+    - cronjob
+    kubeVersion: '>=1.33.0-0'
+    maintainers:
+    - email: kalpesh.br.patel@gmail.com
+      name: Kalpesh Patel
+    name: acute
+    sources:
+    - https://github.com/novacaap/helm-charts
     type: application
     urls:
     - https://khanarshad23.github.io/Helm-Chart/acute-1.2.0.tgz
     version: 1.2.0
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2026-04-14T11:12:26.35182+05:30"
+    created: "2026-07-02T07:19:19.310096715Z"
     description: Flexible chart for deploying apps as Deployment, StatefulSet, Job,
       or CronJob
     digest: f5ab59aca6a94a2e6e00089fa1ed73ff9f487beeca464ea72cb1ce7e6b881d8e
-    home: https://github.com/khanarshad23/Helm-Chart
+    home: https://github.com/novacaap/helm-charts
     keywords:
     - kubernetes
     - helm
@@ -48,14 +75,14 @@ entries:
       name: Kalpesh Patel
     name: acute
     sources:
-    - https://github.com/khanarshad23/Helm-Chart
+    - https://github.com/novacaap/helm-charts
     type: application
     urls:
     - https://khanarshad23.github.io/Helm-Chart/acute-1.1.0.tgz
     version: 1.1.0
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2026-04-14T11:12:26.350661+05:30"
+    created: "2026-07-02T07:19:19.308161211Z"
     description: A Helm chart for Kubernetes
     digest: d34e2d9612da205b7140567e678b2ada25d3db3c9d95cf1d170257a711910269
     name: acute
@@ -65,7 +92,7 @@ entries:
     version: 1.0.1
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2026-04-14T11:12:26.350092+05:30"
+    created: "2026-07-02T07:19:19.306271107Z"
     description: A Helm chart for Kubernetes
     digest: 13ca258342651471c97a2cd0e7f6574ce49bed4df05349dce658e5e695eac9d8
     name: acute
@@ -76,7 +103,7 @@ entries:
   karpenter:
   - apiVersion: v2
     appVersion: v1.0.0
-    created: "2026-04-14T11:12:26.35362+05:30"
+    created: "2026-07-02T07:19:19.314440449Z"
     description: A Helm chart for Karpenter provider OCI
     digest: 2bc249636ed62b879591c81c2513d2c227027d6511598542e90da13e3993d9a2
     home: https://github.com/oracle/karpenter-provider-oci/
@@ -93,4 +120,4 @@ entries:
     urls:
     - https://khanarshad23.github.io/Helm-Chart/karpenter-1.0.0.tgz
     version: 1.0.0
-generated: "2026-04-14T11:12:26.348659+05:30"
+generated: "2026-07-02T07:19:19.304348083Z"
